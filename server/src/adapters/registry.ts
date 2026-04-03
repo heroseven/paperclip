@@ -35,6 +35,12 @@ import {
 } from "@paperclipai/adapter-gemini-local/server";
 import { agentConfigurationDoc as geminiAgentConfigurationDoc, models as geminiModels } from "@paperclipai/adapter-gemini-local";
 import {
+  execute as geminiApiExecute,
+  testEnvironment as geminiApiTestEnvironment,
+  sessionCodec as geminiApiSessionCodec,
+} from "@paperclipai/adapter-gemini-api/server";
+import { agentConfigurationDoc as geminiApiAgentConfigurationDoc, models as geminiApiModels } from "@paperclipai/adapter-gemini-api";
+import {
   execute as openCodeExecute,
   listOpenCodeSkills,
   syncOpenCodeSkills,
@@ -54,7 +60,17 @@ import {
   agentConfigurationDoc as openclawGatewayAgentConfigurationDoc,
   models as openclawGatewayModels,
 } from "@paperclipai/adapter-openclaw-gateway";
+import {
+  execute as openaiExecute,
+  testEnvironment as openaiTestEnvironment,
+  sessionCodec as openaiSessionCodec,
+} from "@paperclipai/adapter-openai-api/server";
+import {
+  agentConfigurationDoc as openaiAgentConfigurationDoc,
+  models as openaiModels,
+} from "@paperclipai/adapter-openai-api";
 import { listCodexModels } from "./codex-models.js";
+
 import { listCursorModels } from "./cursor-models.js";
 import {
   execute as piExecute,
@@ -138,6 +154,16 @@ const geminiLocalAdapter: ServerAdapterModule = {
   agentConfigurationDoc: geminiAgentConfigurationDoc,
 };
 
+const geminiApiAdapter: ServerAdapterModule = {
+  type: "gemini_api",
+  execute: geminiApiExecute,
+  testEnvironment: geminiApiTestEnvironment,
+  sessionCodec: geminiApiSessionCodec,
+  models: geminiApiModels,
+  supportsLocalAgentJwt: false,
+  agentConfigurationDoc: geminiApiAgentConfigurationDoc,
+};
+
 const openclawGatewayAdapter: ServerAdapterModule = {
   type: "openclaw_gateway",
   execute: openclawGatewayExecute,
@@ -188,6 +214,16 @@ const hermesLocalAdapter: ServerAdapterModule = {
   detectModel: () => detectModelFromHermes(),
 };
 
+const openaiApiAdapter: ServerAdapterModule = {
+  type: "openai_api",
+  execute: openaiExecute,
+  testEnvironment: openaiTestEnvironment,
+  sessionCodec: openaiSessionCodec,
+  models: openaiModels,
+  supportsLocalAgentJwt: false,
+  agentConfigurationDoc: openaiAgentConfigurationDoc,
+};
+
 const adaptersByType = new Map<string, ServerAdapterModule>(
   [
     claudeLocalAdapter,
@@ -196,8 +232,10 @@ const adaptersByType = new Map<string, ServerAdapterModule>(
     piLocalAdapter,
     cursorLocalAdapter,
     geminiLocalAdapter,
+    geminiApiAdapter,
     openclawGatewayAdapter,
     hermesLocalAdapter,
+    openaiApiAdapter,
     processAdapter,
     httpAdapter,
   ].map((a) => [a.type, a]),

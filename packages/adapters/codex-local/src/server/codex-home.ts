@@ -4,8 +4,10 @@ import path from "node:path";
 import type { AdapterExecutionContext } from "@paperclipai/adapter-utils";
 
 const TRUTHY_ENV_RE = /^(1|true|yes|on)$/i;
+// auth.json is copied (not symlinked) for Windows compatibility — symlinks require
+// elevated privileges on Windows. We refresh auth.json on every run so credentials stay current.
 const COPIED_SHARED_FILES = ["config.json", "config.toml", "instructions.md"] as const;
-const SYMLINKED_SHARED_FILES = ["auth.json"] as const;
+const ALWAYS_COPIED_FILES = ["auth.json"] as const;
 const DEFAULT_PAPERCLIP_INSTANCE_ID = "default";
 
 function nonEmpty(value: string | undefined): string | null {
@@ -42,31 +44,13 @@ async function ensureParentDir(target: string): Promise<void> {
   await fs.mkdir(path.dirname(target), { recursive: true });
 }
 
-async function ensureSymlink(target: string, source: string): Promise<void> {
+async function ensureCopiedFile(
+  target: string,
+  source: string,
+  { overwrite = false } = {},
+): Promise<void> {
   const existing = await fs.lstat(target).catch(() => null);
-  if (!existing) {
-    await ensureParentDir(target);
-    await fs.symlink(source, target);
-    return;
-  }
-
-  if (!existing.isSymbolicLink()) {
-    return;
-  }
-
-  const linkedPath = await fs.readlink(target).catch(() => null);
-  if (!linkedPath) return;
-
-  const resolvedLinkedPath = path.resolve(path.dirname(target), linkedPath);
-  if (resolvedLinkedPath === source) return;
-
-  await fs.unlink(target);
-  await fs.symlink(source, target);
-}
-
-async function ensureCopiedFile(target: string, source: string): Promise<void> {
-  const existing = await fs.lstat(target).catch(() => null);
-  if (existing) return;
+  if (existing && !overwrite) return;
   await ensureParentDir(target);
   await fs.copyFile(source, target);
 }
@@ -83,10 +67,11 @@ export async function prepareManagedCodexHome(
 
   await fs.mkdir(targetHome, { recursive: true });
 
-  for (const name of SYMLINKED_SHARED_FILES) {
+  // auth.json is always refreshed (overwrite) so credentials stay current without needing symlinks
+  for (const name of ALWAYS_COPIED_FILES) {
     const source = path.join(sourceHome, name);
     if (!(await pathExists(source))) continue;
-    await ensureSymlink(path.join(targetHome, name), source);
+    await ensureCopiedFile(path.join(targetHome, name), source, { overwrite: true });
   }
 
   for (const name of COPIED_SHARED_FILES) {

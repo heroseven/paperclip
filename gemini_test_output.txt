@@ -1,0 +1,103 @@
+﻿{"type":"init","timestamp":"2026-04-03T18:46:46.511Z","session_id":"cae1ac48-9240-4af4-91da-27251d04e6b3","model":"auto-gemini-3"}
+{"type":"message","timestamp":"2026-04-03T18:46:46.514Z","role":"user","content":"Respond with hello."}
+node.exe : Attempt 1 
+failed with status 503. 
+Retrying with backoff... 
+_ApiError: 
+{"error":{"message":"{\n 
+ \"error\": {\n    
+\"code\": 503,\n    
+\"message\": \"This 
+model is currently 
+experiencing high 
+demand. Spikes in demand 
+are usually temporary. 
+Please try again 
+later.\",\n    
+\"status\": 
+\"UNAVAILABLE\"\n  }\n}\n
+","code":503,"status":"Se
+rvice Unavailable"}}
+At C:\Users\Stephan\AppDa
+ta\Roaming\npm\gemini.ps1
+:24 char:5
++     & "node$exe" 
+--no-warnings=DEP0040 "$b
+asedir/node_modules/@goog
+le ...
++     ~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo       
+       : NotSpecified:   
+  (Attempt 1 faile...    
+ Unavailable"}}:Strin    
+g) [], RemoteExcepti    
+on
+    + FullyQualifiedErro 
+   rId : NativeCommandE  
+  rror
+ 
+    at throwErrorIfNotOK 
+(file:///C:/Users/Stephan
+/AppData/Roaming/npm/node
+_modules/@google/gemini-c
+li/bundle/chunk-S2IQOR7T.
+js:35831:24)
+    at process.processTic
+ksAndRejections (node:int
+ernal/process/task_queues
+:105:5)
+    at async file:///C:/U
+sers/Stephan/AppData/Roam
+ing/npm/node_modules/@goo
+gle/gemini-cli/bundle/chu
+nk-S2IQOR7T.js:35594:7
+    at async Models.gener
+ateContentStream (file://
+/C:/Users/Stephan/AppData
+/Roaming/npm/node_modules
+/@google/gemini-cli/bundl
+e/chunk-S2IQOR7T.js:36690
+:16)
+    at async file:///C:/U
+sers/Stephan/AppData/Roam
+ing/npm/node_modules/@goo
+gle/gemini-cli/bundle/chu
+nk-QVTX2M5J.js:276624:19
+    at async file:///C:/U
+sers/Stephan/AppData/Roam
+ing/npm/node_modules/@goo
+gle/gemini-cli/bundle/chu
+nk-QVTX2M5J.js:253666:23
+    at async 
+retryWithBackoff (file://
+/C:/Users/Stephan/AppData
+/Roaming/npm/node_modules
+/@google/gemini-cli/bundl
+e/chunk-QVTX2M5J.js:27358
+6:23)
+    at async GeminiChat.m
+akeApiCallAndProcessStrea
+m (file:///C:/Users/Steph
+an/AppData/Roaming/npm/no
+de_modules/@google/gemini
+-cli/bundle/chunk-QVTX2M5
+J.js:308672:28)
+    at async GeminiChat.s
+treamWithRetries (file://
+/C:/Users/Stephan/AppData
+/Roaming/npm/node_modules
+/@google/gemini-cli/bundl
+e/chunk-QVTX2M5J.js:30851
+5:29)
+    at async Turn.run (fi
+le:///C:/Users/Stephan/Ap
+pData/Roaming/npm/node_mo
+dules/@google/gemini-cli/
+bundle/chunk-QVTX2M5J.js:
+309002:24) {
+  status: 503
+}
+{"type":"message","timestamp":"2026-04-03T18:47:00.425Z","role":"assistant","content":"hello","delta":true}
+{"type":"result","timestamp":"2026-04-03T18:47:00.918Z","status":"success","stats":{"total_tokens":14132,"input_tokens":13942,"output_tokens":34,"cached":2809,"input":11133,"duration_ms":14409,"tool_calls":0,"models":{"gemini-2.5-flash-lite":{"total_tokens":3407,"input_tokens":3238,"output_tokens":33,"cached":2809,"input":429},"gemini-3-flash-preview":{"total_tokens":10725,"input_tokens":10704,"output_tokens":1,"cached":0,"input":10704}}}}

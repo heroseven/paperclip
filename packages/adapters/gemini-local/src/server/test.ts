@@ -207,7 +207,7 @@ export async function testEnvironment(
           ...(hasHello
             ? {}
             : {
-              hint: "Try `gemini --output-format json \"Respond with hello.\"` manually to inspect full output.",
+              hint: 'Try `gemini --output-format json "Respond with hello."` manually to inspect full output.',
             }),
         });
       } else if (authMeta.requiresAuth) {
@@ -224,7 +224,7 @@ export async function testEnvironment(
           level: "error",
           message: "Gemini hello probe failed.",
           ...(detail ? { detail } : {}),
-          hint: "Run `gemini --output-format json \"Respond with hello.\"` manually in this working directory to debug.",
+          hint: 'Run `gemini --output-format json "Respond with hello."` manually in this working directory to debug.',
         });
       }
     }

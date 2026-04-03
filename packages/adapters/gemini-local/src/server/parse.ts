@@ -121,22 +121,43 @@ export function parseGeminiJsonl(stdout: string) {
       continue;
     }
 
+    // Gemini CLI v0.36+ uses type:"message" instead of type:"assistant"
+    if (type === "message") {
+      const role = asString(event.role, "").trim().toLowerCase();
+      if (role === "assistant" || role === "model") {
+        // content may be a plain string (delta) or a structured object
+        const contentStr = asString(event.content, "").trim();
+        if (contentStr) {
+          messages.push(contentStr);
+        } else {
+          messages.push(...collectMessageText(event.content));
+        }
+      }
+      continue;
+    }
+
+
     if (type === "result") {
       resultEvent = event;
-      accumulateUsage(usage, event.usage ?? event.usageMetadata);
+      // v0.36 puts stats under event.stats; older versions use event.usage / event.usageMetadata
+      accumulateUsage(usage, event.usage ?? event.usageMetadata ?? event.stats);
       const resultText =
         asString(event.result, "").trim() ||
         asString(event.text, "").trim() ||
         asString(event.response, "").trim();
       if (resultText && messages.length === 0) messages.push(resultText);
       costUsd = asNumber(event.total_cost_usd, asNumber(event.cost_usd, asNumber(event.cost, costUsd ?? 0))) || costUsd;
-      const isError = event.is_error === true || asString(event.subtype, "").toLowerCase() === "error";
+      const isError =
+        event.is_error === true ||
+        asString(event.subtype, "").toLowerCase() === "error" ||
+        asString(event.status, "").toLowerCase() === "error";
       if (isError) {
         const text = asErrorText(event.error ?? event.message ?? event.result).trim();
         if (text) errorMessage = text;
       }
       continue;
     }
+
 
     if (type === "error") {
       const text = asErrorText(event.error ?? event.message ?? event.detail).trim();
